@@ -1,8 +1,15 @@
-from config import API_KEY, GOOGLE_URL
+from config import CONFIG
 import pandas as pd
 import json
 import requests
 import time
+
+# Constants
+GOOGLE_URL = CONFIG.GOOGLE_URL
+FILTER_TYPE = CONFIG.FILTER_TYPE
+API_KEY = CONFIG.API_KEY
+LOCATIONS = CONFIG.LOCATIONS
+
 
 def call_api(location, phrase):
     # TODO: Handle pagination or separate into larger function
@@ -15,7 +22,7 @@ def call_api(location, phrase):
     'query': phrase.lower(),
     'location': ','.join([str(l) for l in location]),
     'radius': 50000,
-    'type': 'place_of_worship',
+    'type': FILTER_TYPE,
     'key': str(API_KEY)
     }
     headers = {}
