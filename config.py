@@ -46,13 +46,26 @@ class _Config:
         return get_config(True)['GOOGLE_URL']
     
     @property
-    def LOCATIONS(self):
-        cords = get_config(True)['LOCATIONS']
+    def SEARCH_LOCATIONS(self):
+        cords = get_config(True)['SEARCH_LOCATIONS']
         return[(c['lat'], c['lon']) for c in cords]
+
+    @property
+    def ZIP_CODES_TO_CHECK(self):
+        zips = get_config(True)['ZIP_CODES_TO_CHECK']
+        return[str(z) for z in zips]
     
     @property
     def PHRASES(self):
         return get_config(True)['PHRASES']
+    
+    @property
+    def FILTER_TYPE(self):
+        return get_config(True)['FILTER_TYPE']
+    
+    @property
+    def FIELDS_TO_USE(self):
+        return get_config(True)['FIELDS_TO_USE']
     
     
 CONFIG = _Config()

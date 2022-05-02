@@ -8,7 +8,10 @@ import time
 GOOGLE_URL = CONFIG.GOOGLE_URL
 FILTER_TYPE = CONFIG.FILTER_TYPE
 API_KEY = CONFIG.API_KEY
-LOCATIONS = CONFIG.LOCATIONS
+LOCATIONS = CONFIG.SEARCH_LOCATIONS
+ZIP_CODES = CONFIG.ZIP_CODES_TO_CHECK
+PHRASES = CONFIG.PHRASES
+FIELDS_TO_USE = CONFIG.FIELDS_TO_USE
 
 
 def call_api(location, phrase):
@@ -84,23 +87,7 @@ def load_data():
 
 def collect_fields(*responses):
     '''Takes unpacked list of json objects'''
-    fields_to_collect = [
-        'place_id',
-        'name',
-        'business_status',
-        'formatted_address',
-        # 'geometry',
-        # 'icon',
-        # 'icon_background_color',
-        # 'icon_mask_base_uri',
-        # 'opening_hours',
-        # 'photos',
-        # 'plus_code',
-        # 'rating',
-        # 'reference',
-        'types',
-        'user_ratings_total'
-        ]
+    fields_to_collect = FIELDS_TO_USE
         # Empty dict for api fields
     fields = {key:list() for key in fields_to_collect}
     # Populates dict with data from response
@@ -115,7 +102,6 @@ def do_locational_search(location, *phrases):
     search_list = []
     for phrase in phrases:
         print(f'Searching for {phrase} places at {location}...')
-        # Gets places
         responses = call_api(location, phrase)
         dict = collect_fields(*responses)
         search_list.append(dict)
@@ -139,27 +125,40 @@ def lookup_details(main_frame):
                     how='left')
     return merged
 
+def check_zip_codes(dataframe):
+    '''
+    Takes DF, returns places with correct zip codes
+    #TODO: Make this better
+    '''
+    query = '|'.join(ZIP_CODES)
+    mask = (dataframe['formatted_address'].str.contains(query))
+    in_area = dataframe[mask]
+    if not in_area.empty:
+        return in_area
+    else:
+        print('Critical Error. No places found in zip coded area.')
+        return None
 
 def main():
-    # TODO: Setup phrases, locations in setting
-    # TODO: Bring back in webb zip codes
-    # TODO: have main file be reread to filter out ZIPCODES
-    phrases = ['Catholic', 'Baptist']
-    locations = [(31.143277, -97.41826)]
+    
     search_list = [] # list of dicts
 
     # Process
-    for location in locations:
-        search = do_locational_search(location, *phrases)
+    for location in LOCATIONS:
+        search = do_locational_search(location, *PHRASES)
         for place in search:
             search_list.append(place)
 
     # Makes a list of dataframes from list of dicts
     df_list = [pd.DataFrame(s) for s in search_list]
     df_all = pd.concat(df_list)
+    df_all.to_csv('./output/without_duplicates_removed.csv', index=False) # Writes
     with_details = lookup_details(df_all)
     if not with_details.empty:
-        with_details.to_csv('main_data.csv', index=False)
+        with_details.to_csv('./output/without_zip_code_verification.csv', index=False) # Writes
+        in_area = check_zip_codes(with_details)
+        in_area.to_csv('./output/main_report.csv', index=False)
+    
 
 if __name__ == '__main__':
     main()
