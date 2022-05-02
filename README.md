@@ -26,5 +26,5 @@ python main.py
 - **UNUSED_FIELDS**: The fields returnable by the API that are not being used. To have then returned, move to the "FIELDS_TO_USE" array. However please note that none of these are currently supported with regards to import cleaning / transforming.
 
 ## TODO
-- Why did I not make this a scraper class? Should rework that before anything else
+- This should have been more obejct-oriented. Should rework that before anything else
 - Async functionality so that people with their GCP billing down can go wild.
