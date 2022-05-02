@@ -1,0 +1,48 @@
+{
+    "API_KEY": "YOUR_API_KEY",
+    "GOOGLE_URL": "https://maps.googleapis.com/maps/api/place",
+    "SEARCH_LOCATIONS": [
+    {"lat": 27.667738, "lon": -99.403688},
+    {"lat": 27.95074, "lon": -99.666187},
+    {"lat": 27.489879, "lon": -99.043498},
+    {"lat": 27.839311, "lon": -99.063754}
+    ],
+    "ZIP_CODES_TO_CHECK": [
+        76502,
+        76504
+    ],
+    "PHRASES": [
+        "Church",
+        "Christian",
+        "Orthodox",
+        "Catholic",
+        "Baptist",
+        "Synagogue",
+        "Mosque",
+        "Presbyterian",
+        "Methodist",
+        "Pentecostal",
+        "Temple"
+        ],
+    
+    "FILTER_TYPE": "place_of_worship",
+    "FIELDS_TO_USE": [
+        "place_id",
+        "name",
+        "business_status",
+        "formatted_address",
+        "types",
+        "user_ratings_total"
+    ],
+    "UNUSED_FIELDS": [
+        "geometry",
+        "icon",
+        "icon_background_color",
+        "icon_mask_base_uri",
+        "opening_hours",
+        "photos",
+        "plus_code",
+        "rating",
+        "reference"
+    ]
+}
